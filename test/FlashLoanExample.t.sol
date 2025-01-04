@@ -22,35 +22,36 @@ contract FlashLoanExampleTest is Test {
 
     FlashLoanExample public flashLoanExample;
 
-    // function setUp() public {
-    //             // vm is a variable included in the forge standard library that is used to manipulate the execution environment of our tests
-    //     // create a fork of Ethereum mainnet using the specified RPC URL and store its id in mainnetFork 
-    //     mainnetFork = vm.createFork(MAINNET_RPC_URL);
-    //     // select the fork obtained using its id
-    //     mvm.selectFork(mainnetFork);
-    //      //deploy FlashLoanExample to the created fork with POOL_ADDRESS_PROVIDER as its constructor argument
-    //     FlashLoanExample(IPoolAddressesProvider(POOL_ADDRESS_PROVIDER));
-    //      //fetch the DAI contract
-    //     token = IERC20(DAI);
+    function setUp() public {
+                // vm is a variable included in the forge standard library that is used to manipulate the execution environment of our tests
+        // create a fork of Ethereum mainnet using the specified RPC URL and store its id in mainnetFork 
+        mainnetFork = vm.createFork(MAINNET_RPC_URL);
+        // select the fork obtained using its id
+        vm.selectFork(mainnetFork);
+         //deploy FlashLoanExample to the created fork with POOL_ADDRESS_PROVIDER as its constructor argument
+        flashLoanExample = new 
+    FlashLoanExample(IPoolAddressesProvider(POOL_ADDRESS_PROVIDER));
+         //fetch the DAI contract
+        token = IERC20(DAI);
 
-    // };
+    }
 
-    // function testTakeAndReturnLoan() public {
-    //      // Get 2000 DAI in our contract by using deal
-    //     // deal is a cheatcode that lets us arbitrarily set the balance of any address and works with most ERC-20 tokens
-    //     uint256 BALANCE_AMOUNT_DAI = 2000 ether;
-    //     deal(DAI, address(flashLoanExample), BALANCE_AMOUNT_DAI);
+    function testTakeAndReturnLoan() public {
+         // Get 2000 DAI in our contract by using deal
+        // deal is a cheatcode that lets us arbitrarily set the balance of any address and works with most ERC-20 tokens
+        uint256 BALANCE_AMOUNT_DAI = 2000 ether;
+        deal(DAI, address(flashLoanExample), BALANCE_AMOUNT_DAI);
 
-    //     // Request and execute a flash loan of 10,000 DAI from Aave
-    //     flashLoanExample(DAI, 10000);
+        // Request and execute a flash loan of 10,000 DAI from Aave
+        flashLoanExample.createFlashLoan(DAI, 10000);
 
-    //             // By this point, we should have executed the flash loan and paid back (10,000 + premium) DAI to Aave
-    //     // Let's check our contract's remaining DAI balance to see how much it has left
-    //     uint remainingBalance = token.balanceOf(address(flashLoanExample));
+                // By this point, we should have executed the flash loan and paid back (10,000 + premium) DAI to Aave
+        // Let's check our contract's remaining DAI balance to see how much it has left
+        uint remainingBalance = token.balanceOf(address(flashLoanExample));
 
 
-    //     // Our remaining balance should be <2000 DAI we originally had, because we had to pay the premium
-    //     //asserLt => assert strictly less than
-    //     asserLt(remainingBalance, BALANCE_AMOUNT_DAI);
-    // };
+        // Our remaining balance should be <2000 DAI we originally had, because we had to pay the premium
+        //asserLt => assert strictly less than
+        assertLt(remainingBalance, BALANCE_AMOUNT_DAI);
+    }
 }
