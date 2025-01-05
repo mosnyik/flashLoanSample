@@ -5,13 +5,10 @@ import "aave-v3-core/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol";
 import "aave-v3-core/contracts/interfaces/IPoolAddressesProvider.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-
-contract FlashLoanExample is FlashLoanSimpleReceiverBase{
+contract FlashLoanExample is FlashLoanSimpleReceiverBase {
     event Log(address asset, uint256 val);
 
-    constructor(IPoolAddressesProvider provider)
-    FlashLoanSimpleReceiverBase(provider)
-    {}
+    constructor(IPoolAddressesProvider provider) FlashLoanSimpleReceiverBase(provider) {}
 
     function createFlashLoan(address asset, uint256 amount) external {
         address receiver = address(this);
@@ -21,7 +18,10 @@ contract FlashLoanExample is FlashLoanSimpleReceiverBase{
         POOL.flashLoanSimple(receiver, asset, amount, params, referralCode);
     }
 
-    function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes calldata params) external returns (bool){
+    function executeOperation(address asset, uint256 amount, uint256 premium, address initiator, bytes calldata params)
+        external
+        returns (bool)
+    {
         // do the abitrage here
         // use abi.decode(params) to decode the params
 
